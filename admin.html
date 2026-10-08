@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henvix Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#111;color:#fff;padding:20px}
+h2{color:#FF3B3B;margin-bottom:15px}
+.box{background:#1A1A1C;border:1px solid #333;border-radius:10px;padding:15px;margin-bottom:15px}
+input,textarea{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff}
+button{background:#E53935;color:#fff;border:none;padding:12px 18px;border-radius:8px;font-weight:bold;width:100%;cursor:pointer;margin-top:10px}
+small{color:#888}
+</style>
+</head>
+<body>
+<h2>HENVIX ADMIN DASHBOARD</h2>
+<div class="box">
+<h4>💰 Payment Wallet</h4>
+<small>Your Apric Spend USDT Address (0x...)</small>
+<input id="wallet" placeholder="Paste your 0x wallet here">
+<button onclick="saveWallet()">SAVE WALLET</button>
+<p id="wStatus" style="font-size:12px;color:#0f0;margin-top:5px"></p>
+</div>
+<div class="box">
+<h4>📚 Add New Course</h4>
+<input id="title" placeholder="Course Title e.g Premiere Pro Mastery">
+<input id="price" type="number" placeholder="Price in USDT e.g 20">
+<textarea id="desc" placeholder="Course description"></textarea>
+<input id="video" placeholder="Video Link (YouTube or Mp4)">
+<button onclick="addCourse()">ADD COURSE + PRICE</button>
+</div>
+<div class="box">
+<h4>📋 Current Courses</h4>
+<div id="list" style="font-size:13px;color:#888">No courses yet.</div>
+</div>
+<script>
+function saveWallet(){
+ localStorage.setItem('henvix_wallet', document.getElementById('wallet').value);
+ document.getElementById('wStatus').innerText="✅ Wallet Saved!";
+}
+function addCourse(){
+ let courses = JSON.parse(localStorage.getItem('henvix_courses')||'[]');
+ courses.push({
+   title: document.getElementById('title').value,
+   price: document.getElementById('price').value,
+   desc: document.getElementById('desc').value,
+   video: document.getElementById('video').value
+ });
+ localStorage.setItem('henvix_courses', JSON.stringify(courses));
+ alert('Course Added!');
+ location.reload();
+}
+window.onload=()=>{
+ let w = localStorage.getItem('henvix_wallet');
+ if(w) document.getElementById('wallet').value=w;
+ let courses = JSON.parse(localStorage.getItem('henvix_courses')||'[]');
+ if(courses.length>0){
+   document.getElementById('list').innerHTML=courses.map(c=>`<div style="border-bottom:1px solid #222;padding:8px 0"><b>${c.title}</b> - $${c.price}<br><small>${c.desc}</small></div>`).join('');
+ }
+}
+</script>
+</body>
+  </html>
